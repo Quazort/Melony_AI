@@ -1,7 +1,6 @@
 import ollama
 from core.config import settings
-from openai import AsyncOpenAI
-
+from openai import AsyncOpenAI, OpenAI
 
 
 class Agent:
@@ -14,22 +13,21 @@ class Agent:
                                messages=[{"role": "system", "content": self.role}, {"role": "user", "content": text}])
         return response
 
-    async def ai_generate_v2(self,text):
-        client = AsyncOpenAI(
-            api_key=settings.API_KEY,
+    def ai_generate_v2(self, text):
+        client = OpenAI(
+            api_key=settings.AI_KEY,
             base_url="https://api.deepseek.com",
-            timeout=20)
+            timeout=30)
 
-        response = await client.chat.completions.create(
+        response = client.chat.completions.create(
             model=settings.AI_MODEL,
             messages=[
                 {"role": "system", "content": self.role},
                 {"role": "user", "content": text},
             ],
+            temperature= 0.7,
+            response_format={'type': 'json_object'},
             stream=False,
-            reasoning_effort="high",
-            extra_body={"thinking": {"type": "enabled"}},
-            timeout=15
+            timeout=30
         )
-        print(response.choices[0].message.content)
         return response

@@ -10,6 +10,7 @@ logger = get_logger("server-fastapi")
 
 
 @reports_router.post("/v1", status_code=status.HTTP_202_ACCEPTED)
-async def get_resume(token: str, resume: str):
-    # TODO - Основная логика обработки резюме
-    return {"detail": "Резюме в обработке, ожидайте"}
+async def get_resume(token: str, resume: str): # вот тут добавить следует
+    # функция проверки токена
+    result = resume_processing.delay(resume)
+    return {"detail": "Резюме в обработке, ожидайте", "task_id": result.id}
