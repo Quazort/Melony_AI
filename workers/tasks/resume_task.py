@@ -111,12 +111,10 @@ def score_points(hr_requirements: dict, resume_dict: dict):
         score += all_score_fields['max_score_extra_requirements'] if (len(
             hr_requirements['extra_requirements']) / 2) <= len(
             resume_dict['extra_skills']) else 0
-    logger.info(f"баллы после extra_skills {score}")
 
     if 'max_score_tasks' in all_score_fields.keys():
         score += all_score_fields['max_score_tasks'] if (len(hr_requirements['tasks']) / 2) <= len(
             resume_dict['matching_tasks']) else 0
-    logger.info(f"баллы после matching_tasks {score}")
 
     if hr_requirements['years_of_work'] != 0:
         months_required = hr_requirements['years_of_work'] * 12
@@ -129,18 +127,13 @@ def score_points(hr_requirements: dict, resume_dict: dict):
     else:
         score += all_score_fields['max_score_years_of_work']
 
-    logger.info(f"баллы после years_of_work {score}")
-
     score += all_score_fields['max_score_format_of_the_work'] if set(hr_requirements['format_of_the_work']) & set(
         resume_dict['format_of_the_work']) else 0
-    logger.info(f"баллы после format_of_the_work {score}")
 
     if len(hr_requirements['requirements']) <= len(resume_dict['skills']):
         score += all_score_fields['max_score_requirements']
     else:
         one_score_hr_requirements = all_score_fields['max_score_requirements'] / len(hr_requirements['requirements'])
         score += one_score_hr_requirements * len(resume_dict['skills'])
-
-    logger.info(f"баллы после skills {score}")
 
     return round(score, 2)
