@@ -7,7 +7,8 @@ from workers.celery_config import app
 logger = get_logger("celery-worker")
 
 
-@app.task(name="resume_task", bind=True, retry_backoff=True, retry_jitter=True, max_retries=3)
+@app.task(name="resume_task", bind=True, retry_backoff=True, retry_jitter=True, max_retries=3, acks_late=True,
+          reject_on_worker_lost=True)
 def resume_processing(self, hr_requirements, resume):
     first_ai = Agent(
         role="Ты - профессиональный инструмент для анализа данных в сфере HR. Ты обязан строго следовать правилам и не придумывать факты.\n"
