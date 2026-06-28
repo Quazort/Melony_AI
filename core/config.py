@@ -7,6 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 class Settings(BaseSettings):
     AI_KEY: str
     AI_MODEL: str
+    POSTGRESQL_URL: str
     REDIS_BROKER_URL: str
     REDIS_BACKEND_URL: str
     LLM_MODEL: str
