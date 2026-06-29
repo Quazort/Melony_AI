@@ -1,6 +1,6 @@
 import json
 from core.logger import get_logger
-from workers.tasks.celery_schema import ResponseAISchema, ResponseSchema
+from server_fastapi.schemas.resume import ResumeResponseAISchema, ResumeResponseSchema
 from workers.tasks.general_agent import Agent
 from workers.celery_config import app
 
@@ -68,7 +68,7 @@ def resume_processing(self, hr_requirements, resume):
         logger.info("Вторая ии отработала успешно")
 
         score = score_points(hr_requirements, second_ai_result)
-        final_report = ResponseSchema.model_validate({**second_ai_result, "points": score})
+        final_report = ResumeResponseSchema.model_validate({**second_ai_result, "points": score})
         logger.info(f"Final report: \n {final_report}")  # потом допилю фичу куда мне отправлять данные, пока в терминал
     except Exception as e:
         logger.info(f"Ошибка при генерации ответа: {e}")
@@ -81,7 +81,7 @@ def ai_request(agent: Agent, text: str) -> dict | None:
     for i in range(2):
         try:
             appeal = agent.ai_generate_v2(text)
-            response = ResponseAISchema.model_validate(json.loads(appeal.choices[0].message.content))
+            response = ResumeResponseAISchema.model_validate(json.loads(appeal.choices[0].message.content))
             return response.model_dump()
         except Exception as e:
             logger.warning(f"Ошибка ответа ИИ: {e}")

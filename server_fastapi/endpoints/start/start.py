@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from starlette import status
 
 from core.logger import get_logger
-from workers.tasks.celery_schema import HRRequirementsSchema
+from server_fastapi.schemas.vacancy import HRRequirementsSchema
 from workers.tasks.resume_task import resume_processing
 
 main_router = APIRouter(prefix="/resume", tags=["Start"])
